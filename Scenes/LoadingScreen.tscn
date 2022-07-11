@@ -1,0 +1,109 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Images/Circle.png" type="Texture" id=1]
+[ext_resource path="res://Images/Circle2.png" type="Texture" id=2]
+[ext_resource path="res://Scenes/Blackhole.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scripts/LoadingScreen.gd" type="Script" id=4]
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://Images/Name.png" type="Texture" id=6]
+[ext_resource path="res://Images/background.png" type="Texture" id=7]
+
+[sub_resource type="Animation" id=1]
+resource_name = "FadeOut"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 1, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 1 ), Color( 0, 0, 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=2]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 1 ) ]
+}
+
+[sub_resource type="DynamicFont" id=3]
+size = 44
+font_data = ExtResource( 5 )
+
+[node name="LoadingScreen" type="Node2D"]
+script = ExtResource( 4 )
+
+[node name="Sprite5" type="Sprite" parent="."]
+visible = false
+position = Vector2( 393, 661 )
+scale = Vector2( 0.728709, 0.729799 )
+texture = ExtResource( 7 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 179, 177 )
+scale = Vector2( 0.3, 0.3 )
+texture = ExtResource( 1 )
+
+[node name="Sprite2" type="Sprite" parent="."]
+position = Vector2( 558, 337 )
+scale = Vector2( 0.3, 0.3 )
+texture = ExtResource( 2 )
+
+[node name="Blackhole" parent="." instance=ExtResource( 3 )]
+position = Vector2( 385, 1097 )
+
+[node name="Sprite4" type="Sprite" parent="."]
+position = Vector2( 349, 569 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 6 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/FadeOut = SubResource( 1 )
+anims/RESET = SubResource( 2 )
+
+[node name="Button" type="Button" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = 115.0
+margin_top = 696.0
+margin_right = 632.0
+margin_bottom = 806.0
+custom_colors/font_color = Color( 0, 1, 0.811765, 1 )
+custom_colors/font_color_pressed = Color( 0.878431, 0.101961, 0.101961, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "Play"
+
+[node name="Button2" type="Button" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = 115.0
+margin_top = 856.0
+margin_right = 632.0
+margin_bottom = 966.0
+custom_colors/font_color = Color( 0, 1, 0.811765, 1 )
+custom_colors/font_color_pressed = Color( 0.878431, 0.101961, 0.101961, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "How To Play"
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+margin_right = 1488.0
+margin_bottom = 2639.0
+color = Color( 0, 0, 0, 1 )
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]

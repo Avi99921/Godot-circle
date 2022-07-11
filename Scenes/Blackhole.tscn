@@ -1,0 +1,97 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Images/BlackHole.svg" type="Texture" id=1]
+[ext_resource path="res://Scripts/Blackhole.gd" type="Script" id=2]
+[ext_resource path="res://Images/star.svg" type="Texture" id=3]
+[ext_resource path="res://Scripts/PullingArea.gd" type="Script" id=4]
+
+[sub_resource type="Curve" id=1]
+_data = [ Vector2( 0.0273973, 0.104545 ), 0.0, 0.0, 0, 0, Vector2( 0.287671, 0.695454 ), 1.32727, 1.32727, 0, 0, Vector2( 0.493151, 0.913636 ), 0.0, 0.0, 0, 0, Vector2( 0.657534, 0.877273 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.0227273 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CircleShape2D" id=3]
+radius = 74.0068
+
+[sub_resource type="Animation" id=5]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ -360.0 ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "spin"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, -360.0 ]
+}
+
+[node name="Blackhole" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Aura" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 8, 8, 128, 128 )
+
+[node name="Twirl" type="Sprite" parent="."]
+rotation = 6.28319
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 148, 133, 105, 123 )
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+amount = 13
+lifetime = 0.8
+texture = ExtResource( 3 )
+emission_shape = 1
+emission_sphere_radius = 63.31
+direction = Vector2( 0, 0 )
+spread = 180.0
+gravity = Vector2( 0, 0 )
+radial_accel = -58.2
+scale_amount = 0.1
+scale_amount_curve = SubResource( 1 )
+
+[node name="Hole" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 25, 178, 55, 54 )
+
+[node name="PullingArea" type="Area2D" parent="."]
+rotation = -6.28319
+script = ExtResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PullingArea"]
+shape = SubResource( 3 )
+
+[node name="Tween" type="Tween" parent="PullingArea"]
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="PullingArea"]
+autoplay = "spin"
+anims/RESET = SubResource( 5 )
+anims/spin = SubResource( 6 )
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+position = Vector2( 0.499996, 0 )
+scale = Vector2( 7.45, 7.4 )
+
+[connection signal="body_entered" from="PullingArea" to="PullingArea" method="_on_PullingArea_body_entered"]
+[connection signal="tween_all_completed" from="PullingArea/Tween" to="PullingArea" method="_on_Tween_tween_all_completed"]
+[connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]
